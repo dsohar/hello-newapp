@@ -7,6 +7,8 @@ podTemplate(containers: [
       containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent', ttyEnabled: true),
       containerTemplate(name: 'docker', image: 'docker:dind', command: 'cat', ttyEnabled: true, privileged: true)
   ])
+  volumes: [
+    emptyDirVolume(mountPath: '/var/lib/docker', memory: false) ]
   {
     node(POD_LABEL) {
         stage('chackout') {
@@ -19,7 +21,7 @@ podTemplate(containers: [
         stage('build') {
             container('docker') {
               echo "Building docker image..."
-              sh "docker build -t ${appname}:1.${env.BUILD_NUMBER} ."
+              sh "docker build . -t ${appname}:1.${env.BUILD_NUMBER}"
               echo "Pushing Docker Image"
               sh "echo docker push $appimage"
             }
