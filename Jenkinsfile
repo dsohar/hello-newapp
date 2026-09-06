@@ -2,6 +2,7 @@ def appname = "hello-newapp"
 def repo = "dsohar"  // Replace with your DockerHub username
 def appimage = "docker.io/${repo}/${appname}"
 def apptag = "${env.BUILD_NUMBER}"
+def dockerImage
 
 podTemplate(cloud: 'kubernetes', containers: [
     containerTemplate(
@@ -26,22 +27,30 @@ podTemplate(cloud: 'kubernetes', containers: [
         } // end chackout
 
         stage('Building and Scanning in Parallel') {
-            parallel {
-                stage('Build Docker Image') {
-                    container('docker') {
-                        echo "Building docker image..."
-                        script {
-                            dockerImage = docker.build("${appimage}:${apptag}", ".")
+            parallel(
+                'Build Docker Image': {
+                    stage('Build Docker Image') {
+                        container('docker') {
+                            echo "Building Docker image..."
+
+                            dockerImage = docker.build(
+                                "${appimage}:${apptag}",
+                                "."
+                            )
+
                             echo "Image Name: ${appimage}:${apptag}"
                         }
                     }
-                }
-                stage('Scan Docker Image') {
-                    container('docker') {
-                        echo "Scanning..."
+                },
+
+                'Scan Docker Image': {
+                    stage('Scan Docker Image') {
+                        container('docker') {
+                            echo "Scanning..."
+                        }
                     }
                 }
-            }
+            )
         }
 
         stage('push') {
