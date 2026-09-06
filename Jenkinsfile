@@ -29,7 +29,7 @@ podTemplate(cloud: 'kubernetes', containers: [
             container('docker') {
               echo "Building docker image..."
               script {
-                dockerImage = docker.build("${appimage}:${apptag}")
+                dockerImage = docker.build("${appimage}:${apptag}", ".")
                 echo "Image Name: ${appimage}:${apptag}"
               }
             }
@@ -38,7 +38,7 @@ podTemplate(cloud: 'kubernetes', containers: [
         stage('push') {
             container('docker') {
               script {
-                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds') {
                     dockerImage.push()
                 }
               }
