@@ -37,8 +37,8 @@ podTemplate(cloud: 'kubernetes', containers: [
                     }
                 }
                 stage('Scan Docker Image') {
-                    steps {
-                        echo "scanning"
+                    container('docker') {
+                        echo "Scanning..."
                     }
                 }
             }
