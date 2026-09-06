@@ -19,7 +19,7 @@ podTemplate(containers: [
         stage('build') {
             container('docker') {
               echo "Building docker image..."
-              sh "docker built -t ${appname}:1.${env.BUILD_NUMBER}"
+              sh "docker build -t ${appname}:1.${env.BUILD_NUMBER}"
               echo "Pushing Docker Image"
               sh "echo docker push $appimage"
             }
