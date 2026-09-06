@@ -25,15 +25,24 @@ podTemplate(cloud: 'kubernetes', containers: [
           }
         } // end chackout
 
-        stage('build') {
-            container('docker') {
-              echo "Building docker image..."
-              script {
-                dockerImage = docker.build("${appimage}:${apptag}", ".")
-                echo "Image Name: ${appimage}:${apptag}"
-              }
+        stage('Building and Scanning in Parallel') {
+            parallel {
+                stage('Build Docker Image') {
+                    container('docker') {
+                        echo "Building docker image..."
+                        script {
+                            dockerImage = docker.build("${appimage}:${apptag}", ".")
+                            echo "Image Name: ${appimage}:${apptag}"
+                        }
+                    }
+                }
+                stage('Scan Docker Image') {
+                    steps {
+                        echo "scanning"
+                    }
+                }
             }
-        } //end build
+        }
 
         stage('push') {
             container('docker') {
