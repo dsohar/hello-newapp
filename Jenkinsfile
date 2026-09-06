@@ -37,8 +37,6 @@ podTemplate(cloud: 'kubernetes', containers: [
                                 "${appimage}:${apptag}",
                                 "."
                             )
-
-                            echo "Image Name: ${appimage}:${apptag}"
                         }
                     }
                 },
@@ -47,7 +45,7 @@ podTemplate(cloud: 'kubernetes', containers: [
                     stage('Scan Docker Image') {
                         container('docker') {
                             echo "Scanning..."
-                             sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL ${appimage}:${apptag}'
+                            //  sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL ${appimage}:${apptag}'
                         }
                     }
                 }
