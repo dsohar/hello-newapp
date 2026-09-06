@@ -25,11 +25,23 @@ podTemplate(cloud: 'kubernetes', containers: [
           }
         } // end chackout
 
-        stage('Hello') {
+        stage('build') {
             container('docker') {
               echo "Building docker image..."
-              sh "echo docker push $appimage"
+              script {
+                dockerImage = docker.build("${appimage}:${apptag}")
+              }
             }
-        } //end hello
+        } //end build
+
+        stage('push') {
+            container('docker') {
+              script {
+                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                  dockerImage.push()
+                }
+              }
+            }
+        } //end push
     }
 }
