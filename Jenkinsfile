@@ -30,6 +30,7 @@ podTemplate(cloud: 'kubernetes', containers: [
               echo "Building docker image..."
               script {
                 dockerImage = docker.build("${appimage}:${apptag}")
+                echo "Image Name: ${appimage}:${apptag}"
               }
             }
         } //end build
@@ -38,7 +39,6 @@ podTemplate(cloud: 'kubernetes', containers: [
             container('docker') {
               script {
                 docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
-                    echo "logged into docker, about to push"
                     dockerImage.push()
                 }
               }
