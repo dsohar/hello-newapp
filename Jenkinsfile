@@ -37,12 +37,12 @@ podTemplate(cloud: 'kubernetes', containers: [
         stage('push') {
             container('docker') {
               script {
-                docker.withRegistry('https://hub.docker.com/repository/docker/dsohar/hello-newapp/', 'dockerhub-creds') {
-                  dockerImage.push()
+                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                    echo "logged into docker, about to push"
+                    dockerImage.push()
                 }
               }
             }
         } //end push
     }
 }
-
