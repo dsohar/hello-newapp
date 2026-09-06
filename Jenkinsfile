@@ -37,7 +37,7 @@ podTemplate(cloud: 'kubernetes', containers: [
         stage('push') {
             container('docker') {
               script {
-                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                docker.withRegistry('https://hub.docker.com/repository/docker/dsohar/hello-newapp/', 'dockerhub-creds') {
                   dockerImage.push()
                 }
               }
@@ -45,3 +45,4 @@ podTemplate(cloud: 'kubernetes', containers: [
         } //end push
     }
 }
+
